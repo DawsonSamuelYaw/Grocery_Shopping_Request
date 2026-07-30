@@ -6,6 +6,10 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
 import '../../providers/grocery_store.dart';
 import '../auth/login_screen.dart';
+import 'favourites_screen.dart';
+import 'payment_methods_screen.dart';
+import 'privacy_security_screen.dart';
+import 'saved_addresses_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -40,7 +44,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ),
     _ProfileActivity(
       title: 'Payment method added',
-      description: 'A new card was added to your account.',
+      description: 'A new payment method was added to your account.',
       date: 'Jul 16, 2026',
       icon: Icons.credit_card_outlined,
       type: _ActivityType.information,
@@ -83,24 +87,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
   ];
 
   String get _initials {
-    final parts = _name
+    final nameParts = _name
         .trim()
         .split(RegExp(r'\s+'))
         .where((part) => part.isNotEmpty)
         .toList();
 
-    if (parts.isEmpty) {
+    if (nameParts.isEmpty) {
       return 'U';
     }
 
-    if (parts.length == 1) {
-      return parts.first.substring(0, 1).toUpperCase();
+    if (nameParts.length == 1) {
+      return nameParts.first.characters.first.toUpperCase();
     }
 
-    return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
+    final firstInitial = nameParts.first.characters.first;
+    final lastInitial = nameParts.last.characters.first;
+
+    return '$firstInitial$lastInitial'.toUpperCase();
   }
 
-  void _changeActivityPage(int page, int totalPages) {
+  Future<void> _openScreen(Widget screen) {
+    return Navigator.push<void>(
+      context,
+      MaterialPageRoute<void>(
+        builder: (_) => screen,
+      ),
+    );
+  }
+
+  void _changeActivityPage({
+    required int page,
+    required int totalPages,
+  }) {
     if (page < 0 || page >= totalPages) {
       return;
     }
@@ -111,28 +130,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _showEditProfileSheet() async {
-    final nameController = TextEditingController(text: _name);
-    final emailController = TextEditingController(text: _email);
-    final phoneController = TextEditingController(text: _phone);
-
     final formKey = GlobalKey<FormState>();
+
+    final nameController = TextEditingController(
+      text: _name,
+    );
+
+    final emailController = TextEditingController(
+      text: _email,
+    );
+
+    final phoneController = TextEditingController(
+      text: _phone,
+    );
 
     final updatedProfile = await showModalBottomSheet<_UpdatedProfile>(
       context: context,
       isScrollControlled: true,
       showDragHandle: true,
+      useSafeArea: true,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       builder: (sheetContext) {
         return Padding(
           padding: EdgeInsets.fromLTRB(
-            24,
-            8,
-            24,
+            22,
+            4,
+            22,
             MediaQuery.viewInsetsOf(sheetContext).bottom + 24,
           ),
           child: Form(
             key: formKey,
             child: SingleChildScrollView(
+              keyboardDismissBehavior:
+              ScrollViewKeyboardDismissBehavior.onDrag,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,7 +171,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     'Edit profile',
                     style: TextStyle(
                       color: AppColors.darkGreen,
-                      fontSize: 23,
+                      fontSize: 24,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -151,23 +181,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: TextStyle(
                       color: AppColors.muted,
                       fontSize: 14,
+                      height: 1.4,
                     ),
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
                     controller: nameController,
                     textCapitalization: TextCapitalization.words,
+                    textInputAction: TextInputAction.next,
+                    autofillHints: const [
+                      AutofillHints.name,
+                    ],
                     decoration: const InputDecoration(
                       labelText: 'Full name',
-                      prefixIcon: Icon(Icons.person_outline_rounded),
+                      prefixIcon: Icon(
+                        Icons.person_outline_rounded,
+                      ),
                     ),
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
+                      final name = value?.trim() ?? '';
+
+                      if (name.isEmpty) {
                         return 'Enter your full name';
                       }
 
-                      if (value.trim().length < 3) {
-                        return 'Name is too short';
+                      if (name.length < 3) {
+                        return 'Enter a valid full name';
                       }
 
                       return null;
@@ -177,9 +216,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   TextFormField(
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    autofillHints: const [
+                      AutofillHints.email,
+                    ],
                     decoration: const InputDecoration(
                       labelText: 'Email address',
-                      prefixIcon: Icon(Icons.email_outlined),
+                      prefixIcon: Icon(
+                        Icons.email_outlined,
+                      ),
                     ),
                     validator: (value) {
                       final email = value?.trim() ?? '';
@@ -188,11 +233,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         return 'Enter your email address';
                       }
 
-                      final isValid = RegExp(
+                      final isValidEmail = RegExp(
                         r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
                       ).hasMatch(email);
 
-                      if (!isValid) {
+                      if (!isValidEmail) {
                         return 'Enter a valid email address';
                       }
 
@@ -203,13 +248,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   TextFormField(
                     controller: phoneController,
                     keyboardType: TextInputType.phone,
+                    textInputAction: TextInputAction.done,
+                    autofillHints: const [
+                      AutofillHints.telephoneNumber,
+                    ],
                     decoration: const InputDecoration(
                       labelText: 'Phone number',
-                      prefixIcon: Icon(Icons.phone_outlined),
+                      prefixIcon: Icon(
+                        Icons.phone_outlined,
+                      ),
                     ),
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Enter your phone number';
+                      final digits = (value ?? '').replaceAll(
+                        RegExp(r'[^0-9]'),
+                        '',
+                      );
+
+                      if (digits.length < 10) {
+                        return 'Enter a valid phone number';
                       }
 
                       return null;
@@ -218,9 +274,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
-                    child: FilledButton(
+                    child: FilledButton.icon(
                       onPressed: () {
-                        if (!formKey.currentState!.validate()) {
+                        FocusScope.of(sheetContext).unfocus();
+
+                        if (!(formKey.currentState?.validate() ?? false)) {
                           return;
                         }
 
@@ -233,15 +291,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         );
                       },
+                      icon: const Icon(
+                        Icons.check_rounded,
+                      ),
+                      label: const Text(
+                        'Save changes',
+                      ),
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.green,
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      child: const Text('Save changes'),
                     ),
                   ),
                 ],
@@ -256,7 +321,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     emailController.dispose();
     phoneController.dispose();
 
-    if (updatedProfile == null || !mounted) {
+    if (!mounted || updatedProfile == null) {
       return;
     }
 
@@ -266,21 +331,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _phone = updatedProfile.phone;
     });
 
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        const SnackBar(
-          content: Text('Profile updated successfully.'),
-        ),
-      );
+    _showMessage(
+      message: 'Profile updated successfully.',
+    );
   }
 
-  Future<void> _confirmLogout(GroceryStore store) async {
+  Future<void> _confirmLogout(
+      GroceryStore store,
+      ) async {
     final shouldLogout = await showDialog<bool>(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Log out?'),
+          icon: const Icon(
+            Icons.logout_rounded,
+            color: AppColors.red,
+          ),
+          title: const Text(
+            'Log out?',
+          ),
           content: const Text(
             'You will need to sign in again to access your account.',
           ),
@@ -289,24 +358,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () {
                 Navigator.pop(dialogContext, false);
               },
-              child: const Text('Cancel'),
+              child: const Text(
+                'Cancel',
+              ),
             ),
-            FilledButton(
+            FilledButton.icon(
               onPressed: () {
                 Navigator.pop(dialogContext, true);
               },
+              icon: const Icon(
+                Icons.logout_rounded,
+                size: 18,
+              ),
+              label: const Text(
+                'Log out',
+              ),
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.red,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('Log out'),
             ),
           ],
         );
       },
     );
 
-    if (shouldLogout != true || !mounted) {
+    if (!mounted || shouldLogout != true) {
       return;
     }
 
@@ -314,41 +391,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (_) => const LoginScreen(),
       ),
           (route) => false,
     );
   }
 
-  void _openSection({
-    required String title,
-    required IconData icon,
+  void _showMessage({
     required String message,
+    bool isError = false,
   }) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => _ProfileSectionScreen(
-          title: title,
-          icon: icon,
-          message: message,
+    if (!mounted) {
+      return;
+    }
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: isError
+              ? AppColors.red
+              : AppColors.green,
         ),
-      ),
-    );
+      );
   }
 
   @override
   Widget build(BuildContext context) {
     final store = context.watch<GroceryStore>();
 
-    final totalPages =
-    (_activities.length / _activitiesPerPage).ceil();
+    final totalPages = math.max(
+      1,
+      (_activities.length / _activitiesPerPage).ceil(),
+    );
 
-    final int safeCurrentPage = _currentActivityPage
+    final safeCurrentPage = _currentActivityPage
         .clamp(
       0,
-      math.max(0, totalPages - 1),
+      totalPages - 1,
     )
         .toInt();
 
@@ -370,195 +452,218 @@ class _ProfileScreenState extends State<ProfileScreen> {
           final horizontalPadding =
           constraints.maxWidth >= 700 ? 40.0 : 20.0;
 
-          return ListView(
-            keyboardDismissBehavior:
-            ScrollViewKeyboardDismissBehavior.onDrag,
-            padding: EdgeInsets.fromLTRB(
-              horizontalPadding,
-              20,
-              horizontalPadding,
-              34,
-            ),
-            children: [
-              const _ProfilePageHeader(),
+          final maxContentWidth =
+          constraints.maxWidth >= 900 ? 820.0 : double.infinity;
 
-              const SizedBox(height: 24),
-
-              _ProfileOverviewCard(
-                initials: _initials,
-                name: _name,
-                email: _email,
-                phone: _phone,
-                onEdit: _showEditProfileSheet,
+          return Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: maxContentWidth,
               ),
-
-              const SizedBox(height: 26),
-
-              const _SectionTitle(
-                title: 'Account',
-                subtitle: 'Manage your account information and preferences.',
-              ),
-
-              const SizedBox(height: 14),
-
-              _SettingsGroup(
+              child: ListView(
+                keyboardDismissBehavior:
+                ScrollViewKeyboardDismissBehavior.onDrag,
+                padding: EdgeInsets.fromLTRB(
+                  horizontalPadding,
+                  20,
+                  horizontalPadding,
+                  34,
+                ),
                 children: [
-                  _ProfileMenuTile(
-                    icon: Icons.location_on_outlined,
-                    title: 'Saved addresses',
-                    subtitle: 'Manage delivery locations',
-                    onTap: () {
-                      _openSection(
-                        title: 'Saved addresses',
+                  const _ProfilePageHeader(),
+                  const SizedBox(height: 24),
+
+                  _ProfileOverviewCard(
+                    initials: _initials,
+                    name: _name,
+                    email: _email,
+                    phone: _phone,
+                    onEdit: _showEditProfileSheet,
+                  ),
+
+                  const SizedBox(height: 28),
+
+                  const _SectionTitle(
+                    title: 'Account',
+                    subtitle:
+                    'Manage your account information, addresses and payments.',
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  _SettingsGroup(
+                    children: [
+                      _ProfileMenuTile(
                         icon: Icons.location_on_outlined,
-                        message:
-                        'Your saved delivery addresses will appear here.',
-                      );
-                    },
-                  ),
-                  const _SettingsDivider(),
-                  _ProfileMenuTile(
-                    icon: Icons.credit_card_outlined,
-                    title: 'Payment methods',
-                    subtitle: 'Cards and mobile money accounts',
-                    onTap: () {
-                      _openSection(
-                        title: 'Payment methods',
+                        title: 'Saved addresses',
+                        subtitle: 'Manage your delivery locations',
+                        onTap: () {
+                          _openScreen(
+                            const SavedAddressesScreen(),
+                          );
+                        },
+                      ),
+                      const _SettingsDivider(),
+                      _ProfileMenuTile(
                         icon: Icons.credit_card_outlined,
-                        message:
-                        'Your saved payment methods will appear here.',
-                      );
-                    },
-                  ),
-                  const _SettingsDivider(),
-                  _ProfileMenuTile(
-                    icon: Icons.favorite_border_rounded,
-                    title: 'Favourites',
-                    subtitle: 'Products you have saved',
-                    onTap: () {
-                      _openSection(
-                        title: 'Favourites',
+                        title: 'Payment methods',
+                        subtitle: 'Cards and mobile money accounts',
+                        onTap: () {
+                          _openScreen(
+                            const PaymentMethodsScreen(),
+                          );
+                        },
+                      ),
+                      const _SettingsDivider(),
+                      _ProfileMenuTile(
                         icon: Icons.favorite_border_rounded,
-                        message:
-                        'Your favourite products will appear here.',
-                      );
-                    },
+                        title: 'Favourites',
+                        subtitle: store.favouriteCount == 1
+                            ? '1 saved product'
+                            : '${store.favouriteCount} saved products',
+                        trailingBadge: store.favouriteCount > 0
+                            ? store.favouriteCount.toString()
+                            : null,
+                        onTap: () {
+                          _openScreen(
+                            const FavouritesScreen(),
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              ),
 
-              const SizedBox(height: 26),
+                  const SizedBox(height: 28),
 
-              const _SectionTitle(
-                title: 'Preferences',
-                subtitle: 'Control how the application behaves.',
-              ),
-
-              const SizedBox(height: 14),
-
-              _SettingsGroup(
-                children: [
-                  _ProfileSwitchTile(
-                    icon: store.darkMode
-                        ? Icons.dark_mode_outlined
-                        : Icons.light_mode_outlined,
-                    title: 'Dark mode',
-                    subtitle: store.darkMode
-                        ? 'Dark appearance is enabled'
-                        : 'Light appearance is enabled',
-                    value: store.darkMode,
-                    onChanged: store.toggleDarkMode,
+                  const _SectionTitle(
+                    title: 'Preferences',
+                    subtitle:
+                    'Control how the application looks and communicates with you.',
                   ),
-                  const _SettingsDivider(),
-                  _ProfileMenuTile(
-                    icon: Icons.notifications_none_rounded,
-                    title: 'Notifications',
-                    subtitle: 'Manage alerts and order updates',
-                    onTap: () {
-                      _openSection(
-                        title: 'Notifications',
+
+                  const SizedBox(height: 14),
+
+                  _SettingsGroup(
+                    children: [
+                      _ProfileSwitchTile(
+                        icon: store.darkMode
+                            ? Icons.dark_mode_outlined
+                            : Icons.light_mode_outlined,
+                        title: 'Dark mode',
+                        subtitle: store.darkMode
+                            ? 'Dark appearance is enabled'
+                            : 'Light appearance is enabled',
+                        value: store.darkMode,
+                        onChanged: store.toggleDarkMode,
+                      ),
+                      const _SettingsDivider(),
+                      _ProfileMenuTile(
                         icon: Icons.notifications_none_rounded,
-                        message:
-                        'Your notification preferences will appear here.',
-                      );
-                    },
-                  ),
-                  const _SettingsDivider(),
-                  _ProfileMenuTile(
-                    icon: Icons.lock_outline_rounded,
-                    title: 'Privacy and security',
-                    subtitle: 'Password and account security',
-                    onTap: () {
-                      _openSection(
-                        title: 'Privacy and security',
+                        title: 'Notifications',
+                        subtitle: 'Manage alerts and order updates',
+                        onTap: () {
+                          _openScreen(
+                            const _NotificationPreferencesScreen(),
+                          );
+                        },
+                      ),
+                      const _SettingsDivider(),
+                      _ProfileMenuTile(
                         icon: Icons.lock_outline_rounded,
-                        message:
-                        'Your privacy and security options will appear here.',
-                      );
+                        title: 'Privacy and security',
+                        subtitle: 'Password, login and account security',
+                        onTap: () {
+                          _openScreen(
+                            const PrivacySecurityScreen(),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 30),
+
+                  _ActivityHeader(
+                    startIndex:
+                    _activities.isEmpty ? 0 : startIndex + 1,
+                    endIndex: endIndex,
+                    totalActivities: _activities.length,
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  if (visibleActivities.isEmpty)
+                    const _EmptyActivityState()
+                  else
+                    ...visibleActivities.map(
+                          (activity) {
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 12,
+                          ),
+                          child: _ActivityCard(
+                            activity: activity,
+                          ),
+                        );
+                      },
+                    ),
+
+                  if (totalPages > 1) ...[
+                    const SizedBox(height: 10),
+                    _PaginationControls(
+                      currentPage: safeCurrentPage,
+                      totalPages: totalPages,
+                      onPageSelected: (page) {
+                        _changeActivityPage(
+                          page: page,
+                          totalPages: totalPages,
+                        );
+                      },
+                    ),
+                  ],
+
+                  const SizedBox(height: 32),
+
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      _confirmLogout(store);
                     },
+                    icon: const Icon(
+                      Icons.logout_rounded,
+                    ),
+                    label: const Text(
+                      'Log out',
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.red,
+                      side: const BorderSide(
+                        color: AppColors.red,
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 15,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 18),
+
+                  const Center(
+                    child: Text(
+                      'Grocery Shopping Request · Version 1.0.0',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: AppColors.muted,
+                        fontSize: 12,
+                      ),
+                    ),
                   ),
                 ],
               ),
-
-              const SizedBox(height: 28),
-
-              _ActivityHeader(
-                startIndex: startIndex + 1,
-                endIndex: endIndex,
-                totalActivities: _activities.length,
-              ),
-
-              const SizedBox(height: 14),
-
-              ...visibleActivities.map(
-                    (activity) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: _ActivityCard(activity: activity),
-                ),
-              ),
-
-              if (totalPages > 1) ...[
-                const SizedBox(height: 12),
-                _PaginationControls(
-                  currentPage: safeCurrentPage,
-                  totalPages: totalPages,
-                  onPageSelected: (page) {
-                    _changeActivityPage(page, totalPages);
-                  },
-                ),
-              ],
-
-              const SizedBox(height: 30),
-
-              OutlinedButton.icon(
-                onPressed: () {
-                  _confirmLogout(store);
-                },
-                icon: const Icon(Icons.logout_rounded),
-                label: const Text('Log out'),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.red,
-                  side: const BorderSide(color: AppColors.red),
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              const Center(
-                child: Text(
-                  'Grocery Shopping Request · Version 1.0.0',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: AppColors.muted,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-            ],
+            ),
           );
         },
       ),
@@ -572,6 +677,7 @@ class _ProfilePageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           child: Column(
@@ -635,7 +741,9 @@ class _ProfileOverviewCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(26),
         boxShadow: [
           BoxShadow(
-            color: AppColors.darkGreen.withValues(alpha: 0.16),
+            color: AppColors.darkGreen.withValues(
+              alpha: 0.16,
+            ),
             blurRadius: 24,
             offset: const Offset(0, 10),
           ),
@@ -649,15 +757,19 @@ class _ProfileOverviewCard extends StatelessWidget {
               Container(
                 width: 76,
                 height: 76,
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.14),
+                  color: Colors.white.withValues(
+                    alpha: 0.14,
+                  ),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.25),
+                    color: Colors.white.withValues(
+                      alpha: 0.25,
+                    ),
                     width: 2,
                   ),
                 ),
-                alignment: Alignment.center,
                 child: Text(
                   initials,
                   style: const TextStyle(
@@ -683,25 +795,15 @@ class _ProfileOverviewCard extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      email,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 13,
-                      ),
+                    const SizedBox(height: 7),
+                    _ProfileInformationLine(
+                      icon: Icons.email_outlined,
+                      value: email,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      phone,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 13,
-                      ),
+                    const SizedBox(height: 6),
+                    _ProfileInformationLine(
+                      icon: Icons.phone_outlined,
+                      value: phone,
                     ),
                   ],
                 ),
@@ -713,12 +815,19 @@ class _ProfileOverviewCard extends StatelessWidget {
             width: double.infinity,
             child: FilledButton.icon(
               onPressed: onEdit,
-              icon: const Icon(Icons.edit_outlined, size: 19),
-              label: const Text('Edit profile'),
+              icon: const Icon(
+                Icons.edit_outlined,
+                size: 19,
+              ),
+              label: const Text(
+                'Edit profile',
+              ),
               style: FilledButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: AppColors.darkGreen,
-                padding: const EdgeInsets.symmetric(vertical: 13),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 13,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
@@ -727,6 +836,41 @@ class _ProfileOverviewCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ProfileInformationLine extends StatelessWidget {
+  const _ProfileInformationLine({
+    required this.icon,
+    required this.value,
+  });
+
+  final IconData icon;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          color: Colors.white70,
+          size: 15,
+        ),
+        const SizedBox(width: 7),
+        Expanded(
+          child: Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 13,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -750,7 +894,7 @@ class _SectionTitle extends StatelessWidget {
           style: const TextStyle(
             color: AppColors.darkGreen,
             fontSize: 20,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
           ),
         ),
         const SizedBox(height: 4),
@@ -776,13 +920,20 @@ class _SettingsGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: AppColors.border),
+    return Material(
+      color: Theme.of(context).cardColor,
+      borderRadius: BorderRadius.circular(22),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(
+            color: AppColors.border,
+          ),
+        ),
+        child: Column(
+          children: children,
+        ),
       ),
-      child: Column(children: children),
     );
   }
 }
@@ -807,56 +958,86 @@ class _ProfileMenuTile extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.onTap,
+    this.trailingBadge,
   });
 
   final IconData icon;
   final String title;
   final String subtitle;
   final VoidCallback onTap;
+  final String? trailingBadge;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(22),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              _MenuIcon(icon: icon),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        color: AppColors.darkGreen,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(22),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            _MenuIcon(
+              icon: icon,
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: AppColors.darkGreen,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
                     ),
-                    const SizedBox(height: 3),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(
-                        color: AppColors.muted,
-                        fontSize: 12.5,
-                      ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    subtitle,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: AppColors.muted,
+                      fontSize: 12.5,
+                      height: 1.35,
                     ),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+            if (trailingBadge != null) ...[
+              const SizedBox(width: 8),
+              Container(
+                constraints: const BoxConstraints(
+                  minWidth: 26,
+                  minHeight: 26,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 4,
+                ),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColors.softGreen,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  trailingBadge!,
+                  style: const TextStyle(
+                    color: AppColors.darkGreen,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
-              const SizedBox(width: 10),
-              const Icon(
-                Icons.chevron_right_rounded,
-                color: AppColors.muted,
-              ),
             ],
-          ),
+            const SizedBox(width: 7),
+            const Icon(
+              Icons.chevron_right_rounded,
+              color: AppColors.muted,
+            ),
+          ],
         ),
       ),
     );
@@ -884,7 +1065,9 @@ class _ProfileSwitchTile extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
-          _MenuIcon(icon: icon),
+          _MenuIcon(
+            icon: icon,
+          ),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -967,13 +1150,15 @@ class _ActivityHeader extends StatelessWidget {
             style: TextStyle(
               color: AppColors.darkGreen,
               fontSize: 20,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
         const SizedBox(width: 12),
         Text(
-          '$startIndex–$endIndex of $totalActivities',
+          totalActivities == 0
+              ? 'No activity'
+              : '$startIndex–$endIndex of $totalActivities',
           style: const TextStyle(
             color: AppColors.muted,
             fontSize: 13,
@@ -1000,7 +1185,9 @@ class _ActivityCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(
+          color: AppColors.border,
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1058,6 +1245,44 @@ class _ActivityCard extends StatelessWidget {
   }
 }
 
+class _EmptyActivityState extends StatelessWidget {
+  const _EmptyActivityState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 34,
+      ),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppColors.border,
+        ),
+      ),
+      child: const Column(
+        children: [
+          Icon(
+            Icons.history_rounded,
+            color: AppColors.muted,
+            size: 42,
+          ),
+          SizedBox(height: 12),
+          Text(
+            'No recent activity',
+            style: TextStyle(
+              color: AppColors.darkGreen,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _PaginationControls extends StatelessWidget {
   const _PaginationControls({
     required this.currentPage,
@@ -1071,8 +1296,6 @@ class _PaginationControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pages = List.generate(totalPages, (index) => index);
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -1089,37 +1312,40 @@ class _PaginationControls extends StatelessWidget {
             alignment: WrapAlignment.center,
             spacing: 7,
             runSpacing: 7,
-            children: pages.map((page) {
-              final selected = page == currentPage;
+            children: List.generate(
+              totalPages,
+                  (page) {
+                final selected = page == currentPage;
 
-              return Material(
-                color: selected
-                    ? AppColors.green
-                    : AppColors.softGreen,
-                borderRadius: BorderRadius.circular(12),
-                child: InkWell(
+                return Material(
+                  color: selected
+                      ? AppColors.green
+                      : AppColors.softGreen,
                   borderRadius: BorderRadius.circular(12),
-                  onTap: () {
-                    onPageSelected(page);
-                  },
-                  child: SizedBox(
-                    width: 38,
-                    height: 38,
-                    child: Center(
-                      child: Text(
-                        '${page + 1}',
-                        style: TextStyle(
-                          color: selected
-                              ? Colors.white
-                              : AppColors.darkGreen,
-                          fontWeight: FontWeight.w600,
+                  child: InkWell(
+                    onTap: () {
+                      onPageSelected(page);
+                    },
+                    borderRadius: BorderRadius.circular(12),
+                    child: SizedBox(
+                      width: 38,
+                      height: 38,
+                      child: Center(
+                        child: Text(
+                          '${page + 1}',
+                          style: TextStyle(
+                            color: selected
+                                ? Colors.white
+                                : AppColors.darkGreen,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              );
-            }).toList(),
+                );
+              },
+            ),
           ),
         ),
         const SizedBox(width: 8),
@@ -1155,73 +1381,277 @@ class _PaginationArrow extends StatelessWidget {
         minimumSize: const Size(40, 40),
         backgroundColor: enabled
             ? AppColors.softGreen
-            : AppColors.border.withValues(alpha: 0.4),
+            : AppColors.border.withValues(
+          alpha: 0.4,
+        ),
         foregroundColor: enabled
             ? AppColors.darkGreen
-            : AppColors.muted.withValues(alpha: 0.5),
+            : AppColors.muted.withValues(
+          alpha: 0.5,
+        ),
       ),
     );
   }
 }
 
-class _ProfileSectionScreen extends StatelessWidget {
-  const _ProfileSectionScreen({
-    required this.title,
-    required this.icon,
-    required this.message,
-  });
+class _NotificationPreferencesScreen extends StatefulWidget {
+  const _NotificationPreferencesScreen();
 
-  final String title;
-  final IconData icon;
-  final String message;
+  @override
+  State<_NotificationPreferencesScreen> createState() =>
+      _NotificationPreferencesScreenState();
+}
+
+class _NotificationPreferencesScreenState
+    extends State<_NotificationPreferencesScreen> {
+  bool _orderUpdates = true;
+  bool _deliveryUpdates = true;
+  bool _promotions = false;
+  bool _newProducts = false;
+  bool _emailNotifications = true;
+  bool _pushNotifications = true;
+
+  void _showSavedMessage() {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Notification preferences saved.',
+          ),
+          backgroundColor: AppColors.green,
+        ),
+      );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(28),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 82,
-                height: 82,
-                decoration: const BoxDecoration(
-                  color: AppColors.softGreen,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  icon,
-                  color: AppColors.darkGreen,
-                  size: 36,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: AppColors.darkGreen,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                message,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: AppColors.muted,
-                  fontSize: 14,
-                  height: 1.5,
-                ),
-              ),
-            ],
-          ),
+      appBar: AppBar(
+        title: const Text(
+          'Notifications',
         ),
       ),
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(
+            20,
+            20,
+            20,
+            32,
+          ),
+          children: [
+            Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: AppColors.softGreen,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.notifications_active_outlined,
+                      color: AppColors.green,
+                    ),
+                  ),
+                  SizedBox(width: 13),
+                  Expanded(
+                    child: Text(
+                      'Choose the updates you want to receive from the grocery application.',
+                      style: TextStyle(
+                        color: AppColors.darkGreen,
+                        fontSize: 13,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            const _SectionTitle(
+              title: 'Order notifications',
+              subtitle:
+              'Updates about purchases and deliveries.',
+            ),
+            const SizedBox(height: 13),
+            _SettingsGroup(
+              children: [
+                _NotificationSwitchTile(
+                  icon: Icons.receipt_long_outlined,
+                  title: 'Order updates',
+                  subtitle:
+                  'Order confirmation and preparation updates',
+                  value: _orderUpdates,
+                  onChanged: (value) {
+                    setState(() {
+                      _orderUpdates = value;
+                    });
+                  },
+                ),
+                const _SettingsDivider(),
+                _NotificationSwitchTile(
+                  icon: Icons.local_shipping_outlined,
+                  title: 'Delivery updates',
+                  subtitle:
+                  'Receive driver and delivery status alerts',
+                  value: _deliveryUpdates,
+                  onChanged: (value) {
+                    setState(() {
+                      _deliveryUpdates = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            const _SectionTitle(
+              title: 'Marketing',
+              subtitle:
+              'Control promotional and product notifications.',
+            ),
+            const SizedBox(height: 13),
+            _SettingsGroup(
+              children: [
+                _NotificationSwitchTile(
+                  icon: Icons.local_offer_outlined,
+                  title: 'Promotions and discounts',
+                  subtitle:
+                  'Receive deals, offers and promo codes',
+                  value: _promotions,
+                  onChanged: (value) {
+                    setState(() {
+                      _promotions = value;
+                    });
+                  },
+                ),
+                const _SettingsDivider(),
+                _NotificationSwitchTile(
+                  icon: Icons.new_releases_outlined,
+                  title: 'New products',
+                  subtitle:
+                  'Be informed when new grocery items arrive',
+                  value: _newProducts,
+                  onChanged: (value) {
+                    setState(() {
+                      _newProducts = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            const _SectionTitle(
+              title: 'Delivery channels',
+              subtitle:
+              'Choose how notifications should reach you.',
+            ),
+            const SizedBox(height: 13),
+            _SettingsGroup(
+              children: [
+                _NotificationSwitchTile(
+                  icon: Icons.notifications_outlined,
+                  title: 'Push notifications',
+                  subtitle:
+                  'Receive alerts directly on this device',
+                  value: _pushNotifications,
+                  onChanged: (value) {
+                    setState(() {
+                      _pushNotifications = value;
+                    });
+                  },
+                ),
+                const _SettingsDivider(),
+                _NotificationSwitchTile(
+                  icon: Icons.email_outlined,
+                  title: 'Email notifications',
+                  subtitle:
+                  'Receive updates through your email address',
+                  value: _emailNotifications,
+                  onChanged: (value) {
+                    setState(() {
+                      _emailNotifications = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 28),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: _showSavedMessage,
+                icon: const Icon(
+                  Icons.check_rounded,
+                ),
+                label: const Text(
+                  'Save preferences',
+                ),
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.green,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 15,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NotificationSwitchTile extends StatelessWidget {
+  const _NotificationSwitchTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return SwitchListTile.adaptive(
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 5,
+      ),
+      secondary: _MenuIcon(
+        icon: icon,
+      ),
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: AppColors.darkGreen,
+          fontSize: 14.5,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: const TextStyle(
+          color: AppColors.muted,
+          fontSize: 12.5,
+          height: 1.35,
+        ),
+      ),
+      activeTrackColor: AppColors.green,
+      value: value,
+      onChanged: onChanged,
     );
   }
 }
@@ -1233,7 +1663,7 @@ enum _ActivityType {
   warning,
 }
 
-extension on _ActivityType {
+extension _ActivityTypeAppearanceExtension on _ActivityType {
   _ActivityAppearance get appearance {
     switch (this) {
       case _ActivityType.information:
