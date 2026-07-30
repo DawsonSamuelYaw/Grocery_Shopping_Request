@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="500" viewBox="0 0 1400 500"><defs><filter id="shadow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#214A35" flood-opacity="0.16"/></filter></defs>
+<rect width="1400" height="500" rx="36" fill="#214A35"/>
+<circle cx="1130" cy="250" r="300" fill="#4CA35F" opacity=".34"/>
+<text x="80" y="165" font-family="Arial, sans-serif" font-size="66" font-weight="700" fill="#FFFFFF">20% off fresh produce</text>
+<text x="80" y="235" font-family="Arial, sans-serif" font-size="30" fill="#DDEEDF">This week only · locally sourced · while stock lasts</text>
+<rect x="80" y="305" width="245" height="74" rx="37" fill="#FFFFFF"/>
+<text x="202" y="353" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#214A35">Shop now</text>
+<g transform="translate(900 50) scale(.78)">
+<g filter="url(#shadow)" transform="translate(55 90)">
+  <circle cx="165" cy="210" r="92" fill="#E84F45"/>
+  <circle cx="255" cy="225" r="86" fill="#F15C4E"/>
+  <circle cx="225" cy="145" r="78" fill="#D9433B"/>
+  <path d="M218 75 L230 115 L272 100 L245 135 L277 160 L235 153 L223 190 L210 153 L168 161 L201 135 L175 102 L213 116Z" fill="#3C8C4E"/>
+  <path d="M250 150 L260 182 L293 173 L271 200 L298 219 L265 215 L254 245 L245 215 L212 221 L237 200 L216 174 L246 183Z" fill="#459D56"/>
+  <ellipse cx="215" cy="345" rx="165" ry="24" fill="#214A35" opacity=".10"/>
+</g></g>
+</svg>

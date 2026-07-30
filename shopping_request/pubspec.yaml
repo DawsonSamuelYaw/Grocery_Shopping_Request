@@ -19,3 +19,11 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/onboarding/
+    - assets/images/products/
+    - assets/images/categories/
+    - assets/images/banners/
+    - assets/images/profile/
+    - assets/images/states/

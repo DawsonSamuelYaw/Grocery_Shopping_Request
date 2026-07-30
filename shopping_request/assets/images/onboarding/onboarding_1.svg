@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350"><defs><filter id="shadow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#214A35" flood-opacity="0.16"/></filter></defs>
+    <rect width="1080" height="1350" fill="#214A35"/>
+    
+        <rect x="90" y="230" width="900" height="760" rx="80" fill="#DDEEDF"/>
+        <g transform="translate(220 310) scale(1.35)">
+<g filter="url(#shadow)" transform="translate(55 95)">
+  <path d="M110 220 C80 120 155 30 250 75 C210 85 182 120 185 160 C188 205 225 240 280 245 C223 300 135 290 110 220Z" fill="#FFD84D"/>
+  <path d="M145 205 C128 135 180 78 242 90 C215 106 201 132 203 161 C205 192 225 216 258 226 C221 255 161 248 145 205Z" fill="#F7C938"/>
+  <path d="M236 75 C246 62 261 55 280 55" stroke="#6E7E2E" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="110" cy="220" r="9" fill="#6E7E2E"/>
+  <ellipse cx="210" cy="310" rx="145" ry="25" fill="#214A35" opacity=".10"/>
+</g></g>
+        <g transform="translate(505 300) scale(1.2)">
+<g filter="url(#shadow)" transform="translate(70 70)">
+  <path d="M170 270 C95 220 85 110 165 55 C240 110 250 220 170 270Z" fill="#4CA35F"/>
+  <path d="M165 250 C165 165 167 110 167 70" stroke="#DDEEDF" stroke-width="10" stroke-linecap="round"/>
+  <path d="M165 175 C125 155 104 132 90 105" stroke="#DDEEDF" stroke-width="7" stroke-linecap="round"/>
+  <path d="M168 160 C205 138 228 110 244 85" stroke="#DDEEDF" stroke-width="7" stroke-linecap="round"/>
+  <path d="M250 285 C185 245 180 150 245 105 C315 155 318 247 250 285Z" fill="#2F7B46"/>
+  <path d="M248 265 C250 205 250 160 246 120" stroke="#CFE7D3" stroke-width="8" stroke-linecap="round"/>
+  <ellipse cx="205" cy="325" rx="150" ry="25" fill="#214A35" opacity=".10"/>
+</g></g>
+        <g transform="translate(500 625) scale(1.0)">
+<g filter="url(#shadow)" transform="translate(55 90)">
+  <path d="M80 245 C82 160 120 85 205 80 C293 75 345 145 342 235 L335 275 C330 302 310 320 282 320 H135 C105 320 84 300 82 270Z" fill="#D9974E"/>
+  <path d="M110 230 C110 165 145 115 205 112 C270 110 310 165 307 230 L300 280 H118Z" fill="#F3C779"/>
+  <path d="M154 125 C137 150 132 180 136 207" stroke="#B56D32" stroke-width="12" stroke-linecap="round"/>
+  <path d="M213 115 C198 143 195 177 201 207" stroke="#B56D32" stroke-width="12" stroke-linecap="round"/>
+  <path d="M270 128 C255 151 252 180 257 205" stroke="#B56D32" stroke-width="12" stroke-linecap="round"/>
+  <ellipse cx="210" cy="345" rx="155" ry="24" fill="#214A35" opacity=".10"/>
+</g></g>
+        
+    <text x="90" y="1115" font-family="Arial, sans-serif" font-size="66" font-weight="700" fill="#FFFFFF">Fresh groceries</text>
+    <text x="90" y="1190" font-family="Arial, sans-serif" font-size="32" fill="#DDEEDF">Delivered from trusted local stores</text>
+    </svg>

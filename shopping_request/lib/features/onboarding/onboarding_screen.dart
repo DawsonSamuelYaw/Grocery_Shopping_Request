@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
-import '../../core/widgets/app_network_image.dart';
 import '../../core/widgets/primary_button.dart';
 import '../auth/login_screen.dart';
 
@@ -21,28 +20,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     (
     title: 'Fresh groceries,\nfaster than the\ncheckout queue.',
     subtitle:
-    'Order fruit, veg and pantry staples\nfrom local stores, delivered today.',
-    image:
-    'https://images.unsplash.com/photo-1542838132-92c53300491e'
-        '?auto=format&fit=crop&w=1200&q=85',
+    'Order fruit, veg and pantry staples\n'
+        'from local stores, delivered today.',
+    image: 'assets/images/onboarding/onboarding_1.png',
     ),
     (
     title: 'Everything you need,\nin one beautiful app.',
     subtitle:
     'Browse categories, save favourites\n'
         'and build your basket in seconds.',
-    image:
-    'https://images.unsplash.com/photo-1543168256-418811576931'
-        '?auto=format&fit=crop&w=1200&q=85',
+    image: 'assets/images/onboarding/onboarding_2.png',
     ),
     (
     title: 'Simple checkout,\nfast delivery.',
     subtitle:
     'Choose a delivery time, payment method\n'
         'and track your order from your phone.',
-    image:
-    'https://images.unsplash.com/photo-1588964895597-cfccd6e2dbf9'
-        '?auto=format&fit=crop&w=1200&q=85',
+    image: 'assets/images/onboarding/onboarding_3.png',
     ),
   ];
 
@@ -81,12 +75,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           builder: (context, screenConstraints) {
             final screenHeight = screenConstraints.maxHeight;
 
-            /*
-             * We limit the image height rather than using a rigid 58/42 split.
-             * On short devices, the image becomes smaller so the text and
-             * controls have enough room.
-             */
-            final imageHeight = (screenHeight * 0.50).clamp(280.0, 520.0);
+            final imageHeight = (screenHeight * 0.50).clamp(
+              250.0,
+              500.0,
+            );
 
             return PageView.builder(
               controller: controller,
@@ -107,19 +99,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       height: imageHeight,
                       width: double.infinity,
                       child: _OnboardingImageSection(
-                        imageUrl: item.image,
+                        imagePath: item.image,
                       ),
                     ),
-
-                    /*
-                     * Expanded gives this section the remaining screen space.
-                     * LayoutBuilder tells us exactly how much space remains.
-                     */
                     Expanded(
                       child: LayoutBuilder(
                         builder: (context, contentConstraints) {
                           return SingleChildScrollView(
-                            padding: EdgeInsets.zero,
                             physics: const ClampingScrollPhysics(),
                             child: ConstrainedBox(
                               constraints: BoxConstraints(
@@ -175,10 +161,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
 class _OnboardingImageSection extends StatelessWidget {
   const _OnboardingImageSection({
-    required this.imageUrl,
+    required this.imagePath,
   });
 
-  final String imageUrl;
+  final String imagePath;
 
   @override
   Widget build(BuildContext context) {
@@ -193,9 +179,21 @@ class _OnboardingImageSection extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(30),
-        child: AppNetworkImage(
-          url: imageUrl,
+        child: Image.asset(
+          imagePath,
           fit: BoxFit.cover,
+          width: double.infinity,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              color: AppColors.softGreen,
+              alignment: Alignment.center,
+              child: const Icon(
+                Icons.image_not_supported_outlined,
+                color: AppColors.darkGreen,
+                size: 54,
+              ),
+            );
+          },
         ),
       ),
     );

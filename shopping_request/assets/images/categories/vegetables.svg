@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+    <defs>
+      <linearGradient id="softBg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FFFDF8"/>
+        <stop offset="100%" stop-color="#DDEEDF"/>
+      </linearGradient>
+      <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%">
+        <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#214A35" flood-opacity="0.16"/>
+      </filter>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#softBg)"/>
+    
+    <circle cx="256" cy="220" r="175" fill="#DDEEDF"/>
+    <g transform="translate(45 10) scale(.82)">
+<g filter="url(#shadow)" transform="translate(70 70)">
+  <path d="M170 270 C95 220 85 110 165 55 C240 110 250 220 170 270Z" fill="#4CA35F"/>
+  <path d="M165 250 C165 165 167 110 167 70" stroke="#DDEEDF" stroke-width="10" stroke-linecap="round"/>
+  <path d="M165 175 C125 155 104 132 90 105" stroke="#DDEEDF" stroke-width="7" stroke-linecap="round"/>
+  <path d="M168 160 C205 138 228 110 244 85" stroke="#DDEEDF" stroke-width="7" stroke-linecap="round"/>
+  <path d="M250 285 C185 245 180 150 245 105 C315 155 318 247 250 285Z" fill="#2F7B46"/>
+  <path d="M248 265 C250 205 250 160 246 120" stroke="#CFE7D3" stroke-width="8" stroke-linecap="round"/>
+  <ellipse cx="205" cy="325" rx="150" ry="25" fill="#214A35" opacity=".10"/>
+</g></g>
+    <text x="256" y="465" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#214A35">Vegetables</text>
+    
+    </svg>

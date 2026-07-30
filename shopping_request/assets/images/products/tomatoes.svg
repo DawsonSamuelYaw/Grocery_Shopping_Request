@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="420" viewBox="0 0 420 420">
+    <defs>
+      <linearGradient id="softBg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FFFDF8"/>
+        <stop offset="100%" stop-color="#F7F4ED"/>
+      </linearGradient>
+      <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%">
+        <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#214A35" flood-opacity="0.16"/>
+      </filter>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#softBg)"/>
+    
+<g filter="url(#shadow)" transform="translate(55 90)">
+  <circle cx="165" cy="210" r="92" fill="#E84F45"/>
+  <circle cx="255" cy="225" r="86" fill="#F15C4E"/>
+  <circle cx="225" cy="145" r="78" fill="#D9433B"/>
+  <path d="M218 75 L230 115 L272 100 L245 135 L277 160 L235 153 L223 190 L210 153 L168 161 L201 135 L175 102 L213 116Z" fill="#3C8C4E"/>
+  <path d="M250 150 L260 182 L293 173 L271 200 L298 219 L265 215 L254 245 L245 215 L212 221 L237 200 L216 174 L246 183Z" fill="#459D56"/>
+  <ellipse cx="215" cy="345" rx="165" ry="24" fill="#214A35" opacity=".10"/>
+</g>
+    </svg>

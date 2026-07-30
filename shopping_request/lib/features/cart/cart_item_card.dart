@@ -9,7 +9,10 @@ import '../../data/models/cart_line.dart';
 import '../../providers/grocery_store.dart';
 
 class CartItemCard extends StatelessWidget {
-  const CartItemCard({super.key, required this.line});
+  const CartItemCard({
+    super.key,
+    required this.line,
+  });
 
   final CartLine line;
 
@@ -22,7 +25,9 @@ class CartItemCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(
+          color: AppColors.border,
+        ),
       ),
       child: Row(
         children: [
@@ -31,31 +36,44 @@ class CartItemCard extends StatelessWidget {
             height: 78,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(14),
-              child: AppNetworkImage(url: line.product.imageUrl),
+              child: AppImage(
+                path: line.product.imageUrl,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+              CrossAxisAlignment.start,
               children: [
-                Text(line.product.name),
+                Text(
+                  line.product.name,
+                ),
                 Text(
                   line.product.unit,
-                  style: const TextStyle(color: AppColors.muted),
+                  style: const TextStyle(
+                    color: AppColors.muted,
+                  ),
                 ),
                 const SizedBox(height: 5),
                 Text(
                   money(line.product.price),
-                  style: const TextStyle(color: AppColors.darkGreen),
+                  style: const TextStyle(
+                    color: AppColors.darkGreen,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
           ),
           QuantitySelector(
             quantity: line.quantity,
-            onMinus: () => store.decrease(line.product.id),
-            onPlus: () => store.increase(line.product.id),
+            onMinus: () =>
+                store.decrease(line.product.id),
+            onPlus: () =>
+                store.increase(line.product.id),
           ),
         ],
       ),

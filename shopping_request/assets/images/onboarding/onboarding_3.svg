@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350"><defs><filter id="shadow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#214A35" flood-opacity="0.16"/></filter></defs>
+    <rect width="1080" height="1350" fill="#214A35"/>
+    
+        <rect x="150" y="250" width="780" height="670" rx="80" fill="#DDEEDF"/>
+        <rect x="300" y="355" width="480" height="420" rx="52" fill="#FFFFFF" filter="url(#shadow)"/>
+        <rect x="375" y="455" width="330" height="62" rx="31" fill="#4CA35F"/>
+        <rect x="375" y="550" width="270" height="38" rx="19" fill="#E3DED3"/>
+        <rect x="375" y="620" width="220" height="38" rx="19" fill="#E3DED3"/>
+        <circle cx="695" cy="680" r="62" fill="#4CA35F"/>
+        <path d="M665 680 L685 701 L728 655" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+        
+    <text x="90" y="1115" font-family="Arial, sans-serif" font-size="66" font-weight="700" fill="#FFFFFF">Fast checkout</text>
+    <text x="90" y="1190" font-family="Arial, sans-serif" font-size="32" fill="#DDEEDF">Choose delivery time and pay securely</text>
+    </svg>
