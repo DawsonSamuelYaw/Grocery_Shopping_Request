@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="420" viewBox="0 0 420 420">
+    <defs>
+      <linearGradient id="softBg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FFFDF8"/>
+        <stop offset="100%" stop-color="#F7F4ED"/>
+      </linearGradient>
+      <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%">
+        <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#214A35" flood-opacity="0.16"/>
+      </filter>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#softBg)"/>
+    
+<g filter="url(#shadow)" transform="translate(55 90)">
+  <path d="M80 245 C82 160 120 85 205 80 C293 75 345 145 342 235 L335 275 C330 302 310 320 282 320 H135 C105 320 84 300 82 270Z" fill="#D9974E"/>
+  <path d="M110 230 C110 165 145 115 205 112 C270 110 310 165 307 230 L300 280 H118Z" fill="#F3C779"/>
+  <path d="M154 125 C137 150 132 180 136 207" stroke="#B56D32" stroke-width="12" stroke-linecap="round"/>
+  <path d="M213 115 C198 143 195 177 201 207" stroke="#B56D32" stroke-width="12" stroke-linecap="round"/>
+  <path d="M270 128 C255 151 252 180 257 205" stroke="#B56D32" stroke-width="12" stroke-linecap="round"/>
+  <ellipse cx="210" cy="345" rx="155" ry="24" fill="#214A35" opacity=".10"/>
+</g>
+    </svg>

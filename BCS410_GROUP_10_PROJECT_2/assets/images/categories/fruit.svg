@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+    <defs>
+      <linearGradient id="softBg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FFFDF8"/>
+        <stop offset="100%" stop-color="#FFF3C4"/>
+      </linearGradient>
+      <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%">
+        <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#214A35" flood-opacity="0.16"/>
+      </filter>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#softBg)"/>
+    
+    <circle cx="256" cy="220" r="175" fill="#FFF3C4"/>
+    <g transform="translate(45 10) scale(.82)">
+<g filter="url(#shadow)" transform="translate(55 95)">
+  <path d="M110 220 C80 120 155 30 250 75 C210 85 182 120 185 160 C188 205 225 240 280 245 C223 300 135 290 110 220Z" fill="#FFD84D"/>
+  <path d="M145 205 C128 135 180 78 242 90 C215 106 201 132 203 161 C205 192 225 216 258 226 C221 255 161 248 145 205Z" fill="#F7C938"/>
+  <path d="M236 75 C246 62 261 55 280 55" stroke="#6E7E2E" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="110" cy="220" r="9" fill="#6E7E2E"/>
+  <ellipse cx="210" cy="310" rx="145" ry="25" fill="#214A35" opacity=".10"/>
+</g></g>
+    <text x="256" y="465" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#214A35">Fresh Fruit</text>
+    
+    </svg>

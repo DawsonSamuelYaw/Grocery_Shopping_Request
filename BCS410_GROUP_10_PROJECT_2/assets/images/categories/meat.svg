@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+    <defs>
+      <linearGradient id="softBg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FFFDF8"/>
+        <stop offset="100%" stop-color="#F8DADA"/>
+      </linearGradient>
+      <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%">
+        <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#214A35" flood-opacity="0.16"/>
+      </filter>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#softBg)"/>
+    
+    <circle cx="256" cy="220" r="175" fill="#F8DADA"/>
+    <g transform="translate(45 10) scale(.82)">
+<g filter="url(#shadow)" transform="translate(45 85)">
+  <path d="M90 245 C75 170 125 90 215 75 C295 62 360 115 360 190 C360 270 290 322 210 315 C145 310 105 285 90 245Z" fill="#C84B49"/>
+  <path d="M124 225 C112 170 145 120 205 108 C262 97 315 132 320 185 C326 240 275 280 215 278 C165 275 135 258 124 225Z" fill="#E9796F"/>
+  <path d="M225 145 C188 138 158 158 155 192 C151 229 184 250 220 243 C258 236 275 205 261 176 C254 161 241 150 225 145Z" fill="#FFF4E8"/>
+  <path d="M220 165 C202 160 185 171 182 189 C178 208 195 221 214 216 C234 211 243 196 236 180 C233 172 227 168 220 165Z" fill="#F5D3BD"/>
+  <ellipse cx="215" cy="345" rx="165" ry="25" fill="#214A35" opacity=".10"/>
+</g></g>
+    <text x="256" y="465" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#214A35">Meat</text>
+    
+    </svg>
