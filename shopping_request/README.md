@@ -1,17 +1,39 @@
-# shopping_request
+# Group 10 Grocery App — Modular Flutter Version
 
-A new Flutter project.
+This version is properly separated into modules.
 
-## Getting Started
+## Structure
 
-This project is a starting point for a Flutter application.
+```text
+lib/
+├── app/
+├── core/
+│   ├── theme/
+│   ├── utils/
+│   └── widgets/
+├── data/
+│   ├── models/
+│   └── mock/
+├── providers/
+├── features/
+│   ├── onboarding/
+│   ├── auth/
+│   ├── home/
+│   ├── categories/
+│   ├── products/
+│   ├── cart/
+│   ├── checkout/
+│   ├── orders/
+│   └── profile/
+├── navigation/
+└── main.dart
+```
 
-A few resources to get you started if this is your first Flutter project:
+## Run
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+```bash
+flutter pub get
+flutter run
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The project is frontend-only and uses Provider with mock data.
