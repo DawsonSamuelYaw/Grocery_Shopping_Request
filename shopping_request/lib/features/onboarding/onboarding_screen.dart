@@ -15,17 +15,17 @@ class _OnboardingSlide {
 
 const _slides = [
   _OnboardingSlide(
-    Icons.eco_rounded,
+    Icons.eco,
     'Fresh groceries,\nfaster than the queue.',
     'Order fruit, veg and pantry staples from local stores, delivered today.',
   ),
   _OnboardingSlide(
-    Icons.search_rounded,
+    Icons.search,
     'Find exactly\nwhat you need.',
     'Search, filter by category, and compare prices in seconds.',
   ),
   _OnboardingSlide(
-    Icons.local_shipping_outlined,
+    Icons.local_shipping,
     'Track every order,\nstart to finish.',
     'Follow your delivery live and reorder your favourites in one tap.',
   ),

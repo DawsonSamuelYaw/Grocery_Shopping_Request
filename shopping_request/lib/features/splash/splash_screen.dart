@@ -12,7 +12,7 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.local_grocery_store_rounded, size: 56, color: Colors.white),
+            Icon(Icons.local_grocery_store, size: 56, color: Colors.white),
             SizedBox(height: 16),
             Text(
               'Group 10 Grocery',

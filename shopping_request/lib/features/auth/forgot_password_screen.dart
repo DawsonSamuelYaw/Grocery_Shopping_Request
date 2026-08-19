@@ -51,7 +51,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 const SizedBox(height: 24),
                 IconButton(
                   onPressed: () => context.pop(),
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+                  icon: const Icon(Icons.arrow_back_ios_new, size: 18),
                 ),
                 const SizedBox(height: 12),
                 Text('Reset your password', style: Theme.of(context).textTheme.displaySmall),

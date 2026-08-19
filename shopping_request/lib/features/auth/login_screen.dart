@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     if (context.canPop()) context.pop();
                   },
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+                  icon: const Icon(Icons.arrow_back_ios_new, size: 18),
                 ),
                 const SizedBox(height: 12),
                 Text('Welcome back', style: Theme.of(context).textTheme.displaySmall),

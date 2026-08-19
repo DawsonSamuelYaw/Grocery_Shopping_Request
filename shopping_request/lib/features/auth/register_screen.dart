@@ -56,7 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 24),
                 IconButton(
                   onPressed: () => context.pop(),
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+                  icon: const Icon(Icons.arrow_back_ios_new, size: 18),
                 ),
                 const SizedBox(height: 12),
                 Text('Create an account', style: Theme.of(context).textTheme.displaySmall),
